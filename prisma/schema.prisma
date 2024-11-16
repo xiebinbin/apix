@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model AccessRecord {
+  id        BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  packageName String?   @db.VarChar(255) @map("package_name")
+  uuid      String?   @db.VarChar(255)
+  expiredAt DateTime? @map("expired_at")
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([packageName])
+  @@index([uuid])
+  @@map("access_records")
+}
