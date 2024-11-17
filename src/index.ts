@@ -50,4 +50,5 @@ console.log(`Server is running on http://localhost:${port}`)
 export default {
   fetch: app.fetch,
   port,
+  hostname: '0.0.0.0'
 }
