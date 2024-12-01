@@ -269,6 +269,11 @@
   resolved "https://registry.npmmirror.com/@hono/node-server/-/node-server-1.13.7.tgz#af95cf97bd24ddffc97e72851738cbde0a98c791"
   integrity sha512-kTfUMsoloVKtRA2fLiGSd9qBddmru9KadNyhJCwgKBxTiNkaAJEwkVN9KV/rS4HtmmNRtUh6P+YpmjRMl0d9vQ==
 
+"@hono/zod-validator@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.npmmirror.com/@hono/zod-validator/-/zod-validator-0.4.1.tgz#07e4a07772a689a02ce9a54e8ab4992a6bfadfbe"
+  integrity sha512-I8LyfeJfvVmC5hPjZ2Iij7RjexlgSBT7QJudZ4JvNPLxn0JQ3sqclz2zydlwISAnw21D2n4LQ0nfZdoiv9fQQA==
+
 "@ioredis/commands@^1.1.1":
   version "1.2.0"
   resolved "https://registry.npmmirror.com/@ioredis/commands/-/commands-1.2.0.tgz#6d61b3097470af1fdbbe622795b8921d42018e11"

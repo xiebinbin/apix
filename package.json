@@ -2,11 +2,12 @@
   "name": "apix",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "bun run src/index.ts --hot --watch",
     "build": "rimraf dist && rollup -c"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
+    "@hono/zod-validator": "^0.4.1",
     "@prisma/client": "5.22.0",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",

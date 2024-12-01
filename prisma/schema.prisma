@@ -13,16 +13,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-model AccessRecord {
-  id        BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  packageName String?   @db.VarChar(255) @map("package_name")
-  uuid      String?   @db.VarChar(255)
-  expiredAt DateTime? @map("expired_at")
-  createdAt DateTime? @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+// 广告统计
+model AdStatistic {
+  id               BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  // 包名
+  packageName      String?   @db.VarChar(255)
+  // 广告ID
+  adId             String?   @db.VarChar(255)
+  // 运行成功次数
+  successCount     Int?      @default(0) @map("success_count")
+  // 运行失败次数
+  failCount        Int?      @default(0) @map("fail_count")
+  // 初始化成功次数
+  initSuccessCount Int?      @default(0) @map("init_success_count")
+  // 初始化失败次数
+  initFailCount    Int?      @default(0) @map("init_fail_count")
+  expiredAt        DateTime? @map("expired_at")
+  createdAt        DateTime? @default(now()) @map("created_at")
+  updatedAt        DateTime? @updatedAt @map("updated_at")
 
   @@index([packageName])
+  @@index([adId])
+  @@index([expiredAt])
+  @@map("ad_statistics")
+  AdStatisticLogs AdStatisticLog[]
+}
+
+// 广告统计日志
+model AdStatisticLog {
+  id               BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  adStatistic      AdStatistic? @relation(fields: [adStatisticId], references: [id])
+  adStatisticId    BigInt?   @db.UnsignedBigInt
+  uuid             String?   @db.VarChar(255)
+  // 包名
+  packageName String?   @db.VarChar(255)
+  // 广告ID
+  adId        String?   @db.VarChar(255)
+  // 类型 1: 初始化 2: 运行
+  type        Int?      @db.Int
+  // 状态 1: 成功 2: 失败
+  status      Int?      @db.Int
+  createdAt   DateTime? @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
+  @@index([adId])
+  @@index([packageName])
   @@index([uuid])
-  @@map("access_records")
+  @@index([adStatisticId])
+  @@map("ad_statistic_logs")
 }
