@@ -1,6 +1,7 @@
 
 (async () => {
-    const BASE_URL = `http://127.0.0.1:${process.env.API_PORT}/api`
+    // const BASE_URL = `http://127.0.0.1:${process.env.API_PORT}/api`
+    const BASE_URL = `https://apix.leleshuju.com/api`
     const res1 = await fetch(`${BASE_URL}/ad-statistic/run`, {
         method: 'POST',
         headers: {
@@ -13,7 +14,7 @@
             status: 2
         })
     })
-    console.log(await res1.json())
+    console.log(await res1)
     const res2 = await fetch(`${BASE_URL}/ad-statistic/status`, {
         method: "POST",
         headers: {

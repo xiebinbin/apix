@@ -2,7 +2,7 @@
   "name": "apix",
   "type": "module",
   "scripts": {
-    "dev": "bun run src/index.ts --hot --watch",
+    "dev": "bun run src/index.tsx --hot --watch",
     "build": "rimraf dist && rollup -c"
   },
   "dependencies": {

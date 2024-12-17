@@ -2,6 +2,20 @@ import { db } from "@/libs/db";
 import type { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 export class AdStatisticService {
+    public static async getList(adId: string,packageName: string,page:number,limit:number){
+        const skip = (page - 1) * limit
+        return db.adStatistic.findMany({
+            where:{
+                adId,
+                packageName,
+            },
+            skip,
+            take: limit,
+            orderBy:{
+                createdAt: "desc"
+            }
+        })
+    }
     public static async getLatest(adId: string, packageName: string) {
         const result = await db.adStatistic.findFirst({
             where: {

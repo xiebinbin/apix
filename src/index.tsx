@@ -16,7 +16,7 @@ const app = new Hono<{
   }
 }>()
 app.use('*', logger())
-app.use('*', async (c, next) => {
+app.use('/api/*', async (c, next) => {
   const packageName = c.req.header('package-name') ?? 'demox'
   if (!packageName) {
     return c.json({ code: 400, message: 'package-name is required' }, 400)
@@ -104,7 +104,30 @@ app.post('/api/ad-statistic/init', zValidator('json', z.object({
     data: null
   })
 })
-
+app.get("/query", async (c) => {
+  let page = parseInt(c.req.query('page') ?? '1')
+  let limit = parseInt(c.req.query('limit') ?? '100')
+  const adId = c.req.query('adId') ?? '';
+  const packageName = c.req.query('packageName') ?? '';
+  if (page <= 0) {
+    page = 1
+  }
+  if (limit <= 0 || limit >= 100) {
+    limit = 50;
+  }
+  const items =await AdStatisticService.getList(adId,packageName,page,limit);
+  console.log(items);
+  return c.html(<html>
+    <head>
+      <meta charset="utf-8" />
+    </head>
+    <body>
+      {items.map((item) => {
+        return <p>日期:{dayjs(item.createdAt).format("YYYY-MM-DD")},初始化成功次数:{item.initSuccessCount},广告成功次数:{item.successCount},初始失败次数:{item.initFailCount},广告失败次数:{item.failCount}</p>
+      })}
+    </body>
+  </html>)
+})
 const port = process.env.API_PORT
 console.log(`Server is running on http://localhost:${port}`)
 export default {
