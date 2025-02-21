@@ -80,6 +80,26 @@ export class AdStatisticService {
         }
         return log;
     }
+    public static async getLastRecordRunLog(packageName: string,adId: string,uuid:string){
+        const record =  await db.adStatisticLog.findFirst({
+            where: {
+                adId,
+                packageName,
+                uuid,
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+        if(record){
+            const createdAt = dayjs(record.createdAt);
+            if (createdAt.isBefore(dayjs().subtract(12, 'hour'))) {
+                return null;
+            }
+        }
+        return record;
+
+    }
     // 记录运行日志
     public static async recordRunLog(data: Prisma.AdStatisticLogCreateInput) {
         let adStatistic = await this.getLatest(data?.adId ?? '', data?.packageName ?? '');

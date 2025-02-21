@@ -41,7 +41,11 @@ app.post('/api/ad-statistic/status', zValidator('json', z.object({
   const { adId } = c.req.valid('json');
   const { packageName } = c.var;
   const record = await AdStatisticService.getLatest(adId, packageName);
-  const result = record?.successCount ? record?.successCount < process.env.MAX_REQUEST_COUNT : true;
+  let result = record?.successCount ? record?.successCount < process.env.MAX_REQUEST_COUNT : true;
+  if(result){
+    const runRecord = await AdStatisticService.getLastRecordRunLog(packageName,adId,c.var.uuid);
+    result = runRecord ? false : true;
+  }
   return c.json({
     code: 200,
     message: 'success',
