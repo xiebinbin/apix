@@ -40,11 +40,11 @@ app.post('/api/ad-statistic/status', zValidator('json', z.object({
 })), async (c) => {
   const { adId } = c.req.valid('json');
   const { packageName } = c.var;
-  const record = await AdStatisticService.getLatest(adId, packageName);
-  let result = record?.successCount ? record?.successCount < process.env.MAX_REQUEST_COUNT : true;
-  if(result){
-    const runRecord = await AdStatisticService.getLastRecordRunLog(packageName,adId,c.var.uuid);
-    result = runRecord ? false : true;
+  const runRecord = await AdStatisticService.getLastRecordRunLog(packageName, adId, c.var.uuid);
+  let result = runRecord ? false : true;
+  if (result) {
+    const record = await AdStatisticService.getLatest(adId, packageName);
+    result = record?.successCount ? record?.successCount < process.env.MAX_REQUEST_COUNT : true;
   }
   return c.json({
     code: 200,
@@ -119,7 +119,7 @@ app.get("/query", async (c) => {
   if (limit <= 0 || limit >= 100) {
     limit = 50;
   }
-  const items =await AdStatisticService.getList(adId,packageName,page,limit);
+  const items = await AdStatisticService.getList(adId, packageName, page, limit);
   console.log(items);
   return c.html(<html>
     <head>
