@@ -66,12 +66,14 @@ app.post('/api/ad-statistic/run', zValidator('json', z.object({
   status: z.number().int(),
 })), async (c) => {
   const { adId, status } = c.req.valid('json');
+  const { packageName } = c.var;
   console.log(adId, status)
   let adStatistic = await AdStatisticService.getLatest(adId, c.var.packageName);
   if (!adStatistic) {
     adStatistic = await AdStatisticService.create({
       adId,
       failCount: 0,
+      packageName,
       successCount: 0,
       expiredAt: dayjs().add(20, 'hours').toDate()
     });
