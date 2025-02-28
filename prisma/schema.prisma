@@ -29,6 +29,7 @@ model AdStatistic {
   // 初始化失败次数
   initFailCount       Int?             @default(0) @map("init_fail_count")
   requestSuccessCount Int?             @default(0) @map("request_success_count")
+  requestStatusCount  Int?             @default(0) @map("request_status_count")
   expiredAt           DateTime?        @map("expired_at")
   createdAt           DateTime?        @default(now()) @map("created_at")
   updatedAt           DateTime?        @updatedAt @map("updated_at")

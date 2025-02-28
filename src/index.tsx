@@ -50,9 +50,7 @@ app.post('/api/ad-statistic/status', zValidator('json', z.object({
   //   console.log("process.env.MAX_REQUEST_COUNT",process.env.MAX_REQUEST_COUNT)
   //   result = record?.successCount ? record?.successCount < process.env.MAX_REQUEST_COUNT : true;
   // }
-  if (result) {
-    await AdStatisticService.incRequestSuccess(runRecord?.id ?? 0, adId,packageName);
-  }
+  await AdStatisticService.incRequestSuccess(result,runRecord?.id ?? 0, adId,packageName);
   return c.json({
     code: 200,
     message: 'success',
@@ -136,7 +134,7 @@ app.get("/query", async (c) => {
     </head>
     <body>
       {items.map((item) => {
-        return <p>日期:{dayjs(item.createdAt).format("YYYY-MM-DD")},初始化成功次数:{item.initSuccessCount},广告成功次数:{item.successCount},初始失败次数:{item.initFailCount},广告失败次数:{item.failCount},请求成功次数:{item.requestSuccessCount}</p>
+        return <p>日期:{dayjs(item.createdAt).format("YYYY-MM-DD")},初始化成功次数:{item.initSuccessCount},广告成功次数:{item.successCount},初始失败次数:{item.initFailCount},广告失败次数:{item.failCount},状态请求次数:{item.requestStatusCount},请求成功次数:{item.requestSuccessCount}</p>
       })}
     </body>
   </html>)
