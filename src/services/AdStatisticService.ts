@@ -2,16 +2,31 @@ import { db } from "@/libs/db";
 import type { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 export class AdStatisticService {
-    public static async getList(adId: string,packageName: string,page:number,limit:number){
+    public static async incRequestSuccess(id: number | bigint) {
+        if (id) {
+            return await db.adStatistic.update({
+                where: {
+                    id
+                },
+                data: {
+                    requestSuccessCount: {
+                        increment: 1
+                    }
+                }
+            })
+        }
+        return null;
+    }
+    public static async getList(adId: string, packageName: string, page: number, limit: number) {
         const skip = (page - 1) * limit
         return db.adStatistic.findMany({
-            where:{
+            where: {
                 adId,
                 packageName,
             },
             skip,
             take: limit,
-            orderBy:{
+            orderBy: {
                 createdAt: "desc"
             }
         })
@@ -36,7 +51,7 @@ export class AdStatisticService {
             data
         })
     }
-    public static async update(id: number|bigint, data: Prisma.AdStatisticUpdateInput) {
+    public static async update(id: number | bigint, data: Prisma.AdStatisticUpdateInput) {
         return await db.adStatistic.update({
             where: { id },
             data
@@ -51,7 +66,7 @@ export class AdStatisticService {
                 initSuccessCount: 0,
                 initFailCount: 0,
                 expiredAt: dayjs().add(20, 'hours').toDate(),
-                packageName: data.packageName   
+                packageName: data.packageName
             });
         }
         const log = await db.adStatisticLog.create({
@@ -80,8 +95,8 @@ export class AdStatisticService {
         }
         return log;
     }
-    public static async getLastRecordRunLog(packageName: string,adId: string,uuid:string){
-        const record =  await db.adStatisticLog.findFirst({
+    public static async getLastRecordRunLog(packageName: string, adId: string, uuid: string) {
+        const record = await db.adStatisticLog.findFirst({
             where: {
                 adId,
                 packageName,
@@ -91,7 +106,7 @@ export class AdStatisticService {
                 createdAt: 'desc'
             }
         });
-        if(record){
+        if (record) {
             const createdAt = dayjs(record.createdAt);
             if (createdAt.isBefore(dayjs().subtract(12, 'hour'))) {
                 return null;
@@ -139,4 +154,3 @@ export class AdStatisticService {
         return log;
     }
 }
-    
