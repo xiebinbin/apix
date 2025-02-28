@@ -50,8 +50,8 @@ app.post('/api/ad-statistic/status', zValidator('json', z.object({
   //   console.log("process.env.MAX_REQUEST_COUNT",process.env.MAX_REQUEST_COUNT)
   //   result = record?.successCount ? record?.successCount < process.env.MAX_REQUEST_COUNT : true;
   // }
-  if(result){
-    await AdStatisticService.incRequestSuccess(runRecord?.id ?? 0);
+  if (result) {
+    await AdStatisticService.incRequestSuccess(runRecord?.id ?? 0, adId);
   }
   return c.json({
     code: 200,

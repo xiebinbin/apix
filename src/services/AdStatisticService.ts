@@ -2,7 +2,7 @@ import { db } from "@/libs/db";
 import type { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 export class AdStatisticService {
-    public static async incRequestSuccess(id: number | bigint) {
+    public static async incRequestSuccess(id: number | bigint, adId: string) {
         if (id > 0) {
             return await db.adStatistic.update({
                 where: {
@@ -14,8 +14,15 @@ export class AdStatisticService {
                     }
                 }
             })
+        } else {
+            return await AdStatisticService.create({
+                adId,
+                failCount: 0,
+                successCount: 0,
+                requestSuccessCount: 1,
+                expiredAt: dayjs().add(20, 'hours').toDate()
+            });
         }
-        return null;
     }
     public static async getList(adId: string, packageName: string, page: number, limit: number) {
         const skip = (page - 1) * limit
