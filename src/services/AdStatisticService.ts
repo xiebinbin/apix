@@ -3,7 +3,8 @@ import type { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 export class AdStatisticService {
     public static async incRequestSuccess(id: number | bigint, adId: string) {
-        if (id > 0) {
+        if (Number(id) > 0) {
+            console.log("更新incRequestSuccess",id,adId)
             return await db.adStatistic.update({
                 where: {
                     id
@@ -15,6 +16,7 @@ export class AdStatisticService {
                 }
             })
         } else {
+            console.log("创建incRequestSuccess",id,adId)
             return await AdStatisticService.create({
                 adId,
                 failCount: 0,
