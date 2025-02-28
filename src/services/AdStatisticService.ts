@@ -15,7 +15,7 @@ export class AdStatisticService {
                     },
                     requestSuccessCount: result ? {
                         increment: 1
-                    } : null
+                    } : undefined
                 }
             })
         } else {
