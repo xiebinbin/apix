@@ -9,7 +9,6 @@ export class AdDayStatisticService {
     }
     public static async getToday(packageName: string, channelId: string, adId: string) {
         const today = dayjs();
-        console.log("today",today)
         const statistic = await db.adDayStatistic.findFirst({
             where: {
                 packageName,
@@ -21,7 +20,6 @@ export class AdDayStatisticService {
                 adId
             }
         })
-        console.log("statistic",statistic)
         if (!statistic) {
             return await this.create({
                 packageName,
@@ -38,5 +36,18 @@ export class AdDayStatisticService {
             where: { id: record.id },
             data
         })
+    }
+    public static async getList(packageName: string, channelId: string, adId: string) {
+        const items = await db.adDayStatistic.findMany({
+            where: {
+                packageName,
+                channelId,
+                adId
+            },
+            orderBy: {
+                date: 'desc'
+            },
+        })
+        return items;
     }
 }

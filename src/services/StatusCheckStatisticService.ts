@@ -48,4 +48,11 @@ export class StatusCheckStatisticService {
             }
         })
     }
+    public static async getList(packageName: string, channelId: string, adId: string) {
+        const items = await db.statusCheckStatistic.findMany({
+            where: { packageName, channelId, adId },
+            orderBy: { date: 'desc' },
+        })
+        return items;
+    }
 }

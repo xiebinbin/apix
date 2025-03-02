@@ -35,4 +35,11 @@ export class SdkDayStatisticService {
             data
         })
     }
+    public static async getList(packageName: string, channelId: string) {
+        const items = await db.sdkDayStatistic.findMany({
+            where: { packageName, channelId },
+            orderBy: { date: 'desc' },
+        })
+        return items;
+    }
 }

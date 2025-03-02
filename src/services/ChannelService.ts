@@ -7,8 +7,6 @@ export class ChannelService {
                 name
             }
         })
-
-        console.log("channel", channel);
         if (!channel && name == 'default') {
             return await db.channel.create({
                 data: {

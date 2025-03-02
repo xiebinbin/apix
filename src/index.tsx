@@ -180,28 +180,82 @@ app.post('/api/ad/log', zValidator('json', z.object({
 
 
 app.get("/query", async (c) => {
-  let page = parseInt(c.req.query('page') ?? '1')
-  let limit = parseInt(c.req.query('limit') ?? '100')
+  const category = c.req.query('category') ?? '';
   const adId = c.req.query('adId') ?? '';
   const packageName = c.req.query('packageName') ?? '';
-  if (page <= 0) {
-    page = 1
+  const channelName = c.req.query('channelName') ?? '';
+  if (category == '') {
+    return c.html(<html>
+      <head>
+        <meta charset="utf-8" />
+      </head>
+      <body>
+        <form action="/query" method="get" target="_blank">
+          <label for="adId">广告ID:</label>
+          <input type="text" id="adId" name="adId"/>
+          <br/>
+          <label for="packageName">包名:</label>
+          <input type="text" id="packageName" name="packageName" required/>
+          <br/>
+          <label for="channelName">渠道名:</label>
+          <input type="text" id="channelName" name="channelName" required/>
+          <br/>
+          <label for="category">类别:</label>
+          <select id="category" name="category" required>
+            <option value="ad">广告</option>
+            <option value="sdk">SDK</option>
+            <option value="status-check">状态检测</option>
+          </select>
+          <br/>
+          <input type="submit" value="查询"/>
+        </form>
+      </body>
+    </html>)
   }
-  if (limit <= 0 || limit >= 100) {
-    limit = 50;
+  const channel = await ChannelService.findByName(channelName)
+  if (!channel) {
+    return c.json({ code: 400, message: 'channel is not found' }, 400)
   }
-  const items: any[] = [];
-  console.log(items);
-  return c.html(<html>
-    <head>
+  if (category == 'ad') {
+    const items = await AdDayStatisticService.getList(packageName, channel.id, adId)
+    return c.html(<html>
+      <head>
+        <meta charset="utf-8" />
+      </head>
+      <body>
+        <h1>广告数据</h1>
+        {items.map((item) => {
+          return <p>日期:{dayjs(item.date).format("YYYY-MM-DD")},系统初始化成功次数:{item.initSuccessCount},系统初始化失败次数:{item.initFailCount},广告请求次数:{item.requestSuccessCount},广告请求失败次数:{item.requestFailCount},广告展现成功次数:{item.showSuccessCount},广告展现失败次数:{item.showFailCount},广告点击成功次数:{item.clickSuccessCount},广告点击失败次数:{item.clickFailCount},对话成功次数:{item.dialogSuccessCount},对话失败次数:{item.dialogFailCount},播放成功次数:{item.playSuccessCount},播放失败次数:{item.playFailCount}</p>
+        })}
+      </body>
+    </html>)
+  }
+  if (category == 'sdk') {
+    const items = await SdkDayStatisticService.getList(packageName, channel.id)
+    return c.html(<html>
+      <head>
       <meta charset="utf-8" />
     </head>
     <body>
       {items.map((item) => {
-        return <p>日期:{dayjs(item.createdAt).format("YYYY-MM-DD")},初始化成功次数:{item.initSuccessCount},广告成功次数:{item.successCount},初始失败次数:{item.initFailCount},广告失败次数:{item.failCount},状态请求次数:{item.requestStatusCount},请求成功次数:{item.requestSuccessCount}</p>
+        return <p>日期:{dayjs(item.date).format("YYYY-MM-DD")},初始化成功次数:{item.initSuccessCount},初始失败次数:{item.initFailCount},唤醒次数:{item.wakeUpCount}</p>
       })}
     </body>
   </html>)
+  }
+  if (category == 'status-check') {
+    const items = await StatusCheckStatisticService.getList(packageName, channel.id, adId)
+    return c.html(<html>
+      <head>
+        <meta charset="utf-8" />
+      </head>
+      <body>
+        {items.map((item) => {
+          return <p>日期:{dayjs(item.date).format("YYYY-MM-DD")},渠道开启次数:{item.channelOnCount},渠道关闭次数:{item.channelOffCount},广告开启次数:{item.adOnCount},广告关闭次数:{item.adOffCount}</p>
+        })}
+      </body>
+    </html>)
+  }
 })
 const port = process.env.API_PORT
 console.log(`Server is running on http://localhost:${port}`)
