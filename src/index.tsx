@@ -30,7 +30,8 @@ app.use('*', async (c, next) => {
   // 打印请求头
   console.log(c.req.header())
   // 打印请求体
-  console.log(await c.req.json())
+  
+  console.log(await c.req.text())
   await next()
 })
 app.use('/api/*', async (c, next) => {
