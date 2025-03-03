@@ -8,13 +8,16 @@ export class AdLogService {
             data
         })
     }
-    public static async getLastShowSuccessLog(packageName: string, channelId: string, adId: string) {
+    public static async getLastShowSuccessLog(packageName: string, channelId: string, adId: string,uuid: string) {
         const log = await db.adLog.findFirst({
             where: {
                 packageName,
                 channelId: channelId,
                 adId,
-                status: AdLogStatus.SHOW_SUCCESS
+                uuid,
+                status: {
+                    in: [AdLogStatus.SHOW_SUCCESS, AdLogStatus.PLAY_SUCCESS]
+                }
             },
             orderBy: {
                 createdAt: 'desc'

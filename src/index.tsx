@@ -70,7 +70,9 @@ app.post('/api/sys/status', zValidator('json', z.object({
 })), async (c) => {
   const { channel, packageName } = c.var;
   const { adId } = c.req.valid('json');
-  const adLog = await AdLogService.getLastShowSuccessLog(packageName, channel.id, adId)
+  const uuid = c.var.uuid
+  const adLog = await AdLogService.getLastShowSuccessLog(packageName, channel.id, adId, uuid);
+  console.log("adLog",adLog)
   const channelPower = channel?.power ?? 'off';
   const adPower = adLog ? 'off' : 'on';
   await StatusCheckStatisticService.updateToday(packageName, channel.id, adId, adPower as "on" | "off", channelPower as "on" | "off")
