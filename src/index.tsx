@@ -26,6 +26,13 @@ const app = new Hono<{
 }>()
 
 app.use('*', logger())
+app.use('*', async (c, next) => {
+  // 打印请求头
+  console.log(c.req.header())
+  // 打印请求体
+  console.log(c.req.json())
+  await next()
+})
 app.use('/api/*', async (c, next) => {
   const packageName = c.req.header('package-name') ?? 'demox'
   if (!packageName) {
