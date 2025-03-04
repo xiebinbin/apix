@@ -13,7 +13,7 @@ export class StatusCheckStatisticService {
         const statistic = await db.statusCheckStatistic.findFirst({
             where: {
                 packageName,
-                date: {
+                createdAt: {
                     gte: today.startOf('day').toDate(),
                     lte: today.endOf('day').toDate()
                 },

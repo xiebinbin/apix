@@ -12,7 +12,7 @@ export class AdDayStatisticService {
         const statistic = await db.adDayStatistic.findFirst({
             where: {
                 packageName,
-                date: {
+                createdAt: {
                     gte: dayjs().startOf('day').toDate(),
                     lte: dayjs().endOf('day').toDate(),
                 },
