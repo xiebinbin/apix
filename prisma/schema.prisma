@@ -80,6 +80,25 @@ model AdLog {
   @@index([status])
   @@map("ad_logs")
 }
+
+
+model StatusCheckLog {
+  id        String   @id @default(uuid())
+  channelId String @map("channel_id")
+  packageName String @map("package_name")
+  channelStatus String @map("channel_status")
+  adId String @map("ad_id")
+  adStatus String @map("ad_status")
+  uuid String @map("uuid")
+  createdAt DateTime @default(now()) @map("created_at")
+  @@index([channelId])
+  @@index([packageName])
+  @@index([adId])
+  @@index([uuid])
+  @@index([channelStatus])
+  @@index([adStatus])
+  @@map("status_check_logs")
+}
 // 状态检测统计
 model StatusCheckStatistic {
   id        String   @id @default(uuid())

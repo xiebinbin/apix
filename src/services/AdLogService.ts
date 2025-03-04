@@ -1,7 +1,6 @@
 import { db } from "@/libs/db";
 import { AdLogStatus, type Prisma } from "@prisma/client";
 import dayjs from "dayjs";
-import { ChannelService } from "./ChannelService";
 export class AdLogService {
     public static async create(data: Prisma.AdLogCreateInput) {
         return await db.adLog.create({

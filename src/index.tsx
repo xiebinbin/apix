@@ -13,6 +13,7 @@ import { SdkLogService } from "./services/SdkLogService";
 import { StatusCheckStatisticService } from "./services/StatusCheckStatisticService";
 import { SdkDayStatisticService } from "./services/SdkDayStatisticService";
 import { AdDayStatisticService } from "./services/AdDayStatisticService";
+import { StatusCheckLogService } from "./services/StatusCheckLogService";
 const app = new Hono<{
   Variables: {
     packageName: string
@@ -79,11 +80,18 @@ app.post('/api/sys/status', zValidator('json', z.object({
   const { channel, packageName } = c.var;
   const { adId } = c.req.valid('json');
   const uuid = c.var.uuid
-  const adLog = await AdLogService.getLastShowSuccessLog(packageName, channel.id, adId, uuid);
-  console.log("adLog",adLog)
+  const statusCheckLog = await StatusCheckLogService.getLast(packageName, channel.id, adId, uuid);
   const channelPower = channel?.power ?? 'off';
-  const adPower = adLog ? 'off' : 'on';
+  const adPower = statusCheckLog ? 'off' : 'on';
   await StatusCheckStatisticService.updateToday(packageName, channel.id, adId, adPower as "on" | "off", channelPower as "on" | "off")
+  await StatusCheckLogService.create({
+    channelId: channel.id,
+    packageName,
+    adId,
+    uuid,
+    channelStatus: channelPower,
+    adStatus: adPower
+  })
   return c.json({
     code: 200,
     message: 'success',
